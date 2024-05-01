@@ -1,4 +1,4 @@
-# web-sekolah
+# web-kua
 Made with php
 # APLIKASI
 # APLIKASI
