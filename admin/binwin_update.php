@@ -1,0 +1,30 @@
+<?php 
+include '../koneksi.php';
+$id = $_POST['id'];
+$jadwal_tgl = $_POST['jadwal_tgl'];
+$jadwal_tanggal = $_POST['jadwal_tanggal'];
+$nama= $_POST['nama'];
+$no_hp = $_POST['no_hp'];
+$penyuluh = $_POST['penyuluh'];
+
+$rand = rand();
+$allowed =  array('jpg','jpeg','pdf');
+$filename = $_FILES['trnfoto']['name'];
+$ext = pathinfo($filename, PATHINFO_EXTENSION);
+
+if($filename == ""){
+	mysqli_query($koneksi, "update binwin set jadwal_tgl='$jadwal_tgl', jadwal_tanggal='$jadwal_tanggal', nama='$nama', no_hp='$no_hp', penyuluh='$penyuluh' where binwin_id='$id'") or die(mysqli_error($koneksi));
+	
+     header("location:binwin.php?alert=berhasilupdate");
+}else{
+	$ext = pathinfo($filename, PATHINFO_EXTENSION);
+
+	if(!in_array($ext,$allowed) ) {
+		header("location:binwin.php?alert=gagal");
+	}else{
+		move_uploaded_file($_FILES['trnfoto']['tmp_name'], '../gambar/bukti/'.$rand.'_'.$filename);
+		$xgambar = $rand.'_'.$filename;
+		mysqli_query($koneksi, "update binwin set jadwal_tgl='$jadwal_tgl', jadwal_tanggal='$jadwal_tanggal', nama='$nama',  no_hp='$no_hp', binwin_foto='$xgambar', penyuluh='$penyuluh'  where binwin_id='$id'");
+		header("location:binwin.php?alert=berhasilupdate");
+	}
+}

@@ -1,0 +1,145 @@
+<?php 
+  include '../koneksi.php';
+  session_start();
+  if($_SESSION['status'] != "user_logedin"){
+    header("location:../index.php?alert=belum_login");
+  }
+  ?>
+
+<!DOCTYPE html>
+ <html>
+ <head>
+ 	<meta charset="utf-8">
+ 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+ 	<link rel="stylesheet" href="../assets/bower_components/bootstrap/dist/css/bootstrap.min.css"> 
+ </head>
+ <body>
+	 	<table> 
+ 			<tr>
+			 <td><img src="kemenag-logo.png" width="90" height= "90" style="margin: 30px"></td>
+			 	<td>
+				 	<center>
+ 						<font size="4"><b>KEMENTERIAN AGAMA REPUBLIK INDONESIA</b></font><br>	
+						<font size="3"><b>KANTOR KEMENTERIAN AGAMA KOTA BANJARMASIN</b></font><br>
+						<font size="3"><b>KANTOR URUSAN AGAMA KECAMATAN BANJARMASIN TIMUR</b></font><br>
+						<font size="2"><b>Jalan Pramuka, Melati Indah Komplek Bumi Melati Permai RT.10 No.01 Banjarmasin 70238</b></font><br>
+						<font size="2"><b>Telp. 0511-3257144 e-mail</b></font><br>
+ 					</center>
+ 				</td>
+			</tr>
+
+			<tr>
+				<td colspan="5"><hr></td>
+			</tr>		 	
+ 		</table>	
+
+		 <tr>
+		 		<td>
+					<center>
+						<br>	
+						<font size="3"><b>LAPORAN DATA ZAKAT</b></font><br>
+						<br>
+						<br>
+					</center>
+				</td>
+			</tr>
+		
+ 	<?php 
+ 	if(isset($_GET['tanggal_sampai']) && isset($_GET['tanggal_dari'])){
+ 		$tgl_dari = $_GET['tanggal_dari'];
+ 		$tgl_sampai = $_GET['tanggal_sampai'];
+		?>
+
+ 		<div class="row">
+ 			<div class="col-lg-6">
+ 				<table class="table table-bordered">
+ 					<tr>
+ 						<th width="30%">DARI TANGGAL</th>
+ 						<th width="1%">:</th>
+ 						<td><?php echo date('d-m-Y',strtotime($tgl_dari)); ?></td>
+ 					</tr>
+ 					<tr>
+ 						<th>SAMPAI TANGGAL</th>
+ 						<th>:</th>
+ 						<td><?php echo date('d-m-Y',strtotime($tgl_sampai)); ?></td>
+ 					</tr>
+					
+                  </table>
+                </div>
+              </div>
+
+ 		
+ 			<table class="table table-bordered table-striped">
+ 				<thead>
+ 					<tr>
+					 <th width="1%" rowspan="2">NO</th>
+                    <th width="10%" rowspan="2" class="text-center">TANGGAL</th>
+                    <th rowspan="2" class="text-center">JUMLAH ZAKAT</th>
+                  </tr>
+ 				</thead>
+ 				<tbody>
+				 
+ 					<?php 
+ 					include '../koneksi.php';
+					 $no=1;                
+					 $data = mysqli_query($koneksi,"SELECT * FROM transaksi where  username='".$_SESSION['username']."' and date(transaksi_tanggal)>='$tgl_dari' and date(transaksi_tanggal)<='$tgl_sampai'");
+					 while($d = mysqli_fetch_array($data)) { 
+	 
+						?>
+						<tr>
+						  <td class="text-center"><?php echo $no++; ?></td>
+						  <td class="text-center"><?php echo date('Y-m-d', strtotime($d['transaksi_tanggal'])); ?></td>
+						  <td class="text-center">
+						    <?php 
+						    echo "Rp. ".number_format($d['transaksi_nominal'])." ,-";?></td>
+								
+                       
+				 </tr> 
+			  <?php 
+ 			}
+ 		?>
+				
+
+ 				</tbody>
+ 			</table>
+
+ 		
+		 
+		
+		 <?php 
+        } 
+          ?>
+
+	
+
+		 <tr>
+			<br>
+ 				<div font size="2" class="text-right">Mengetahui,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><br>	
+				<font size="2">Kepala,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><br>
+				<br>
+				<br>
+				<br>
+				<font size="2"><b>H. SYAMSURI, S.Ag, MHI&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b></font><br>
+				<font size="2"><b>NIP. 197604122005011002&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b></font><br>
+ 				</div>
+			</tr>	 	
+
+		
+			
+
+			
+ 		<?php
+ 	
+ 	?>
+
+
+ 	<script>
+
+ 		window.print();
+ 		$(document).ready(function(){
+
+ 		});
+ 	</script>
+
+ </body>
+ </html>
